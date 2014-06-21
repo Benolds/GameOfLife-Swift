@@ -18,16 +18,16 @@ class GameScene: SKScene {
     let _gridWidth = 400
     let _numRows = 8 //number of tiles per column
     let _numCols = 10 // ...per row
-    let _gridLowerLeftCorner:CGPoint = CGPoint(x: 158, y: 10) //grid offset from lower-left corner of screen
+    let _gridLowerLeftCorner = CGPoint(x: 158, y: 10) //grid offset from lower-left corner of screen
     let _margin = 4
 
     // properties defining the stats labels and buttons
-    let _populationLabel:SKLabelNode = SKLabelNode(text: "Population")
-    let _generationLabel:SKLabelNode = SKLabelNode(text: "Generation")
-    var _populationValueLabel:SKLabelNode = SKLabelNode(text: "0")
-    var _generationValueLabel:SKLabelNode = SKLabelNode(text: "0")
-    var _playButton:SKSpriteNode = SKSpriteNode(imageNamed: "play.png")
-    var _pauseButton:SKSpriteNode = SKSpriteNode(imageNamed: "pause.png")
+    let _populationLabel = SKLabelNode(text: "Population")
+    let _generationLabel = SKLabelNode(text: "Generation")
+    var _populationValueLabel = SKLabelNode(text: "0")
+    var _generationValueLabel = SKLabelNode(text: "0")
+    var _playButton = SKSpriteNode(imageNamed: "play.png")
+    var _pauseButton = SKSpriteNode(imageNamed: "pause.png")
     
     // 2d list of tiles
     var _tiles:Tile[][] = []
@@ -54,7 +54,7 @@ class GameScene: SKScene {
         
         // add a background for the entire screen
         let background = SKSpriteNode(imageNamed: "background.png")
-        background.anchorPoint = CGPoint(x: 0, y: 0)
+        background.anchorPoint = CGPoint.zeroPoint
         background.size = self.size
         background.zPosition = -2
         self.addChild(background)
@@ -63,7 +63,7 @@ class GameScene: SKScene {
         let gridBackground = SKSpriteNode(imageNamed: "grid.png")
         gridBackground.size = CGSize(width: _gridWidth, height: _gridHeight)
         gridBackground.zPosition = -1
-        gridBackground.anchorPoint = CGPoint(x:0, y:0)
+        gridBackground.anchorPoint = CGPoint.zeroPoint
         gridBackground.position = _gridLowerLeftCorner
         self.addChild(gridBackground)
         
@@ -120,9 +120,9 @@ class GameScene: SKScene {
             var tileRow:Tile[] = []
             for c in 0.._numCols {
                 let tile = Tile(imageNamed: "bubble.png")
-                tile.isAlive = false;
+                tile.isAlive = false
                 tile.size = CGSize(width: tileSize.width, height: tileSize.height)
-                tile.anchorPoint = CGPoint(x: 0, y: 0)
+                tile.anchorPoint = CGPoint.zeroPoint
                 tile.position = getTilePosition(row: r, column: c)
                 self.addChild(tile)
                 tileRow.append(tile)
@@ -152,8 +152,8 @@ class GameScene: SKScene {
     
     // given and (x,y) position, returns a tile overlapping that position, if any, else returns nil
     func getTileAtPosition(xPos x: Int, yPos y: Int) -> Tile? {
-        let r:Int = Int( CGFloat(y - (Int(_gridLowerLeftCorner.y) + _margin)) / CGFloat(_gridHeight) * CGFloat(_numRows))
-        let c:Int = Int( CGFloat(x - (Int(_gridLowerLeftCorner.x) + _margin)) / CGFloat(_gridWidth) * CGFloat(_numCols))
+        let r = Int( Float(y - (Int(_gridLowerLeftCorner.y) + _margin)) / Float(_gridHeight) * Float(_numRows))
+        let c = Int( Float(x - (Int(_gridLowerLeftCorner.x) + _margin)) / Float(_gridWidth) * Float(_numCols))
         
         if isValidTile(row: r, column: c) {
             return _tiles[r][c]
@@ -172,7 +172,7 @@ class GameScene: SKScene {
         
         // tapping a tile toggles its isAlive state
         for touch: AnyObject in touches {
-            var selectedTile:Tile? = getTileAtPosition(xPos: Int(touch.locationInNode(self).x), yPos: Int(touch.locationInNode(self).y))
+            var selectedTile = getTileAtPosition(xPos: Int(touch.locationInNode(self).x), yPos: Int(touch.locationInNode(self).y))
             if let tile = selectedTile {
                 tile.isAlive = !tile.isAlive
                 if tile.isAlive {
@@ -208,7 +208,7 @@ class GameScene: SKScene {
         for r in 0.._numRows {
             for c in 0.._numCols
             {
-                var numLivingNeighbors:Int = 0
+                var numLivingNeighbors = 0
                 
                 for i in (r-1)...(r+1) {
                     for j in (c-1)...(c+1)
@@ -233,7 +233,7 @@ class GameScene: SKScene {
         for r in 0.._numRows {
             for c in 0.._numCols
             {
-                var tile:Tile = _tiles[r][c]
+                var tile = _tiles[r][c]
                 
                 if tile.numLivingNeighbors == 3 {
                     tile.isAlive = true
