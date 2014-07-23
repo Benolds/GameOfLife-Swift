@@ -20,7 +20,7 @@ class GameScene: SKScene {
     let _numCols = 10 // ...per row
     let _gridLowerLeftCorner:CGPoint = CGPoint(x: 158, y: 10) //grid offset from lower-left corner of screen
     let _margin = 4
-
+    
     // properties defining the stats labels and buttons
     let _populationLabel:SKLabelNode = SKLabelNode(text: "Population")
     let _generationLabel:SKLabelNode = SKLabelNode(text: "Generation")
@@ -30,8 +30,8 @@ class GameScene: SKScene {
     var _pauseButton:SKSpriteNode = SKSpriteNode(imageNamed: "pause.png")
     
     // 2d list of tiles
-    var _tiles:Tile[][] = []
-
+    var _tiles:[[Tile]] = []
+    
     // properties affecting the update loop
     var _isPlaying = false
     var _prevTime:CFTimeInterval = 0
@@ -39,14 +39,14 @@ class GameScene: SKScene {
     
     // properties and setters for population and generatino stats
     var _population:Int = 0 {
-        didSet {
-            _populationValueLabel.text = "\(_population)" // update appropriate label when value changes
-        }
+    didSet {
+        _populationValueLabel.text = "\(_population)" // update appropriate label when value changes
+    }
     }
     var _generation:Int = 0 {
-        didSet {
-            _generationValueLabel.text = "\(_generation)"
-        }
+    didSet {
+        _generationValueLabel.text = "\(_generation)"
+    }
     }
     
     // set up the user interface upon loading the scene
@@ -78,7 +78,7 @@ class GameScene: SKScene {
         microscope.position = CGPoint(x: 79, y: 70)
         microscope.setScale(0.4)
         self.addChild(microscope)
-
+        
         // population label
         _populationLabel.position = CGPoint(x: 79, y: 190)
         _populationLabel.fontName = "Courier"
@@ -104,7 +104,7 @@ class GameScene: SKScene {
         _generationValueLabel.fontSize = 12
         _generationValueLabel.fontColor = UIColor(red: 0, green: 0.2, blue: 0, alpha: 1)
         self.addChild(_generationValueLabel)
-
+        
         // play and pause buttons
         _playButton.position = CGPoint(x: 79, y: 290)
         _playButton.setScale(0.5)
@@ -113,12 +113,12 @@ class GameScene: SKScene {
         _pauseButton.position = CGPoint(x: 79, y: 250)
         _pauseButton.setScale(0.5)
         self.addChild(_pauseButton)
-
+        
         // initialize the 2d array of tiles
         let tileSize = calculateTileSize()
-        for r in 0.._numRows {
-            var tileRow:Tile[] = []
-            for c in 0.._numCols {
+        for r in 0..<_numRows {
+            var tileRow:[Tile] = []
+            for c in 0..<_numCols {
                 let tile = Tile(imageNamed: "bubble.png")
                 tile.isAlive = false;
                 tile.size = CGSize(width: tileSize.width, height: tileSize.height)
@@ -129,7 +129,7 @@ class GameScene: SKScene {
             }
             _tiles.append(tileRow)
         }
-
+        
     }
     
     // given a row and column, returns the (x,y) position that the tile should be placed at
@@ -193,7 +193,7 @@ class GameScene: SKScene {
             }
         }
     }
-
+    
     // evolves the game board state by one iteration
     func timeStep()
     {
@@ -201,12 +201,12 @@ class GameScene: SKScene {
         updateCreatures()
         _generation++
     }
-
+    
     // sets the numLivingNeighbors property of each tile to a value between [0, 8] based on the number of adjacent alive tiles
     func countLivingNeighbors()
     {
-        for r in 0.._numRows {
-            for c in 0.._numCols
+        for r in 0..<_numRows {
+            for c in 0..<_numCols
             {
                 var numLivingNeighbors:Int = 0
                 
@@ -224,14 +224,14 @@ class GameScene: SKScene {
             }
         }
     }
-
+    
     // sets the isAlive state of each tile dependin on their number of living neighbors
     func updateCreatures()
     {
         var numAlive = 0
         
-        for r in 0.._numRows {
-            for c in 0.._numCols
+        for r in 0..<_numRows {
+            for c in 0..<_numCols
             {
                 var tile:Tile = _tiles[r][c]
                 
@@ -261,7 +261,7 @@ class GameScene: SKScene {
     {
         _isPlaying = false
     }
-
+    
     // calls the timeStep method every 0.5 seconds
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
